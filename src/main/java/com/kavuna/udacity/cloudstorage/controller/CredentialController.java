@@ -1,4 +1,4 @@
 package com.kavuna.udacity.cloudstorage.controller;
 
-public class NoteAddController {
+public class CredentialController {
 }
