@@ -1,18 +1,11 @@
 package com.kavuna.udacity.cloudstorage.model;
 
 public class Note {
-    public int noteId;
-    public String noteTitle;
-    public String noteDescription;
 
-    public Note() {
-    }
-
-    public Note(int noteId, String noteTitle, String noteDescription) {
-        this.noteId = noteId;
-        this.noteTitle = noteTitle;
-        this.noteDescription = noteDescription;
-    }
+    private int noteId;
+    private int userId;
+    private String noteTitle;
+    private String noteDescription;
 
     public int getNoteId() {
         return noteId;
@@ -20,6 +13,14 @@ public class Note {
 
     public void setNoteId(int noteId) {
         this.noteId = noteId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getNoteTitle() {
