@@ -1,17 +1,21 @@
 package com.kavuna.udacity.cloudstorage.mapper;
 
 import com.kavuna.udacity.cloudstorage.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-
 
 @Mapper
 public interface UserMapper {
     @Select("SELECT * FROM users WHERE username = #{username}")
+    @Results({
+            @Result(property = "userId", column = "userid"),
+            @Result(property = "username", column = "username"),
+            @Result(property = "salt", column = "salt"),
+            @Result(property = "password", column = "password"),
+            @Result(property = "firstName", column = "firstname"),
+            @Result(property = "lastName", column = "lastname"),
+    })
     User getUser(String username);
 
     @Insert("INSERT INTO users (username, salt, password, firstname, lastname) VALUES(#{username}, #{salt}, #{password}, #{firstName}, #{lastName})")
