@@ -77,16 +77,13 @@
                         <tbody>
                         <tr th:each="note: ${notes}">
                             <td>
-
                                 <script th:inline="javascript">
                                     var noteId = /*[[${note.noteId}]]*/;
-
                                 </script>
                                 <button type="button" class="btn btn-success" th:onclick="showNoteModal([[${note.noteId}]], [[${note.noteTitle}]], [[${note.noteDescription}]]) " >Edit</button>
 
                                 <a th:href="@{deleteNote(id=${note.noteId})}" class="btn btn-danger">Delete</a>
                             </td>
-                            <th scope="row" th:text="${note.noteId}"></th>
                             <td th:text="${note.noteTitle}"></td>
                             <td th:text="${note.noteDescription}"></td>
                         </tr>
@@ -106,6 +103,7 @@
                             </div>
                             <div class="modal-body">
                                 <form  method="POST" th:action="@{/addNote}" >
+                                    <input type="hidden" name="noteId" id="note-id">
                                     <div class="form-group">
                                         <label for="note-title" class="col-form-label">Title</label>
                                         <input type="text" name= "noteTitle" class="form-control" id="note-title" maxlength="20" required>
@@ -141,14 +139,19 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
+                        <tr th:each="credential: ${credentials}">
                             <td>
-                                <button type="button" class="btn btn-success">Edit</button>
-                                <a class="btn btn-danger">Delete</a>
+                                <script th:inline="javascript">
+                                    var credentialId = /*[[${credential.credentialId}]]*/;
+                                </script>
+                                <button type="button" class="btn btn-success" th:onclick="showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${credential.password}]]) " >Edit</button>
+
+                                <a th:href="@{deleteCredential(id=${credential.credentialId})}" class="btn btn-danger">Delete</a>
                             </td>
-                            <th scope="row">Example Credential URL</th>
-                            <td>Example Credential Username</td>
-                            <td>Example Credential Password</td>
+                            <td th:text="${credential.url}"></td>
+                            <td th:text="${credential.username}"></td>
+                            <td th:text="${credential.password}"></td>
+
                         </tr>
                         </tbody>
                     </table>
@@ -164,7 +167,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="#" method="POST">
+                                <form action="#" method="POST" th:action="@{/addCredential}">
                                     <input type="hidden" name="credentialId" id="credential-id">
                                     <div class="form-group">
                                         <label for="note-title" class="col-form-label">URL</label>
@@ -203,7 +206,7 @@
 <script type="text/javascript">
             // For opening the note modal
             function showNoteModal(noteId, noteTitle, noteDescription) {
-                $('#note-id').val(noteId ? noteId : '');
+                $('#note-id').val(noteId ? noteId : 0);
                 $('#note-title').val(noteTitle ? noteTitle : '');
                 $('#note-description').val(noteDescription ? noteDescription : '');
                 $('#noteModal').modal('show');

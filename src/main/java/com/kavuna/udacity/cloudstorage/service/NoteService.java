@@ -23,8 +23,12 @@ public class NoteService {
         return noteMapper.getNoteById(noteId);
     }
 
-    public void deleteNote(int noteId){
-        noteMapper.deleteNote(noteId);
+    public boolean updateNote(Note note){
+        return noteMapper.updateNote(note);
+    }
+
+    public boolean deleteNote(int noteId){
+        return noteMapper.deleteNote(noteId);
     }
     public  List<Note> getAllNotes(){
         return noteMapper.getAllNotes();

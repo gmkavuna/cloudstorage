@@ -10,8 +10,8 @@
 </head>
 <body class="p-3 mb-2 bg-light text-black">
 <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
-    <div id="success-msg" th:if="${successFlag}" class="alert alert-dark">
-        Your note was successfully added!
+    <div id="success-msg" th:if="${successMessage}" class="alert alert-dark">
+        <span th:text="${successMessage}"></span>
     </div>
     <div id="error-msg" th:if="${errorMessage}" class="alert alert-danger">
         <span th:text="${errorMessage}"></span>
