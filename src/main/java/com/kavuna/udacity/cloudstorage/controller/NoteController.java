@@ -7,7 +7,10 @@ import com.kavuna.udacity.cloudstorage.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 public class NoteController {
@@ -34,6 +37,21 @@ public class NoteController {
             model.addAttribute("addNoteSuccess", true);
 
         }
-        return "home";
+        return "result";
     }
+    @GetMapping("/deleteNote")
+    public String deleteNotePage(Model model, Note note, @RequestParam(value="id", required = false)String noteId) throws InterruptedException, ExecutionException, IOException {
+        if (noteId == null){
+            model.addAttribute("note",  note);
+        }
+        else{
+
+            noteService.deleteNote(Integer.parseInt(noteId));
+        }
+        model.addAttribute("noteId",  noteId);
+        return "result";
+    }
+
+
+
 }
