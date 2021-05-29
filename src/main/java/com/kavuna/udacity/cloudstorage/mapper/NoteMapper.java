@@ -15,14 +15,17 @@ public interface NoteMapper {
             @Result(property = "userId", column = "salt"),
 
     })
-    Note getNoteById(Integer noteId);
+    Note getNoteById(int noteId);
 
     @Insert("insert into notes (notetitle, notedescription) values (#{noteTitle}, #{noteDescription})")
     @Options(useGeneratedKeys = true, keyProperty = "noteId")
     int insert(Note note);
 
+    @Update("update notes set notetitle =#{noteTitle}, notedescription=#{noteDescription} where noteid=#{noteId}")
+    public boolean updateNote(Note note);
+
     @Delete("delete from notes where noteid =#{noteId}")
-    public void deleteNote(Integer noteId);
+    public boolean deleteNote(int noteId);
 
     @Select("select * from notes")
     public List<Note> getAllNotes();

@@ -25,33 +25,52 @@ public class NoteController {
 
     @PostMapping("/addNote")
     public String addNote(Authentication authentication, Note note, Model model){
+
+        String successMessage = null;
         String errorMessage = null;
 
+        if (note.getNoteId() != 0){
 
-        int rowsAdded = noteService.createNote(note);
-        if (rowsAdded < 0) {
-            errorMessage = "We were unable to add your note!";
-            model.addAttribute("errorMessage", errorMessage);
+            if (noteService.updateNote(note)){
+                successMessage = "Note successfully updated!";
+            }
+            else{
+                errorMessage = "Error updating note!";
+            }
         }
         else{
-            model.addAttribute("addNoteSuccess", true);
+            if (noteService.createNote(note) < 0) {
+                errorMessage = "We were unable to add your note!";
+            }
+            else{
+                successMessage = "Note successfully added!";
+            }
 
         }
+        model.addAttribute("successMessage", successMessage);
+        model.addAttribute("errorMessage", errorMessage);
+
         return "result";
     }
     @GetMapping("/deleteNote")
     public String deleteNotePage(Model model, Note note, @RequestParam(value="id", required = false)String noteId) throws InterruptedException, ExecutionException, IOException {
+        String errorMessage = "Error while deleting note!";
+        String successMessage = "Note successfully deleted!";
+
         if (noteId == null){
             model.addAttribute("note",  note);
         }
         else{
-
-            noteService.deleteNote(Integer.parseInt(noteId));
+            if (noteService.deleteNote(Integer.parseInt(noteId))){
+                errorMessage = "";
+            }
+            else{
+                successMessage = "";
+            }
         }
         model.addAttribute("noteId",  noteId);
+        model.addAttribute("successMessage", successMessage);
+        model.addAttribute("errorMessage", errorMessage);
         return "result";
     }
-
-
-
 }
