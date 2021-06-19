@@ -1,11 +1,8 @@
 package com.kavuna.udacity.cloudstorage.controller;
 
 import com.kavuna.udacity.cloudstorage.model.Credential;
-import com.kavuna.udacity.cloudstorage.model.Note;
 import com.kavuna.udacity.cloudstorage.service.CredentialService;
-import com.kavuna.udacity.cloudstorage.service.NoteService;
 import com.kavuna.udacity.cloudstorage.service.UserService;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.concurrent.ExecutionException;
 
 @Controller
@@ -25,12 +24,15 @@ public class CredentialController {
     public CredentialController(CredentialService credentialService, UserService userService) {
         this.credentialService = credentialService;
         this.userService = userService;
+
     }
 
     @PostMapping("/addCredential")
     public String addCredential(Authentication authentication, Credential credential, Model model){
         String errorMessage = null;
         String successMessage = null;
+
+
 
         //update if credential object exists
         if (credential.getCredentialId() != null){

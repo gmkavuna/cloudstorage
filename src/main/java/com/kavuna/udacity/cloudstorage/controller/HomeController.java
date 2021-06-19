@@ -6,25 +6,28 @@ import com.kavuna.udacity.cloudstorage.model.Note;
 import com.kavuna.udacity.cloudstorage.service.AuthenticationService;
 import com.kavuna.udacity.cloudstorage.service.CredentialService;
 import com.kavuna.udacity.cloudstorage.service.NoteService;
+import com.kavuna.udacity.cloudstorage.storage.StorageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
 
-
     private NoteService noteService;
     private CredentialService credentialService;
+    private final StorageService storageService;
 
-    public HomeController(NoteService noteService, CredentialService credentialService){
+    public HomeController(NoteService noteService, CredentialService credentialService, StorageService storageService){
         this.noteService = noteService;
         this.credentialService = credentialService;
-
+        this.storageService = storageService;
     }
 
     @RequestMapping("/home")
@@ -48,6 +51,11 @@ public class HomeController {
         else{
             model.addAttribute("credentials", null);
         }
+        model.addAttribute("files", storageService.loadAll().map(
+                path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                        "serveFile", path.getFileName().toString()).build().toUri().toString())
+                .collect(Collectors.toList()));
+
         return "home";
     }
 }

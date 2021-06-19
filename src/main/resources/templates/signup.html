@@ -13,8 +13,7 @@
     <div class="form-group">
         <label><a th:href="@{/login}">Back to Login</a></label>
     </div>
-
-    <h1 class="display-5">Sign Up</h1>
+    <h1 class="display-5" id="pageTitle">Sign Up</h1>
     <form action="#" th:action="@{/signup}" method="POST">
         <div id="success-msg" th:if="${signupSuccess}" class="alert alert-dark">
             <p>You successfully signed up! Please continue to the <a id="login-link" th:href="@{/login}">login</a> page.</p>
@@ -42,7 +41,7 @@
                 <input type="password" value="claude"  name="password" class="form-control" id="inputPassword" placeholder="Enter Password" maxlength="20" required>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Sign Up</button>
+        <button type="submit" id="submit-button" class="btn btn-primary">Sign Up</button>
     </form>
 </div>
 </body>

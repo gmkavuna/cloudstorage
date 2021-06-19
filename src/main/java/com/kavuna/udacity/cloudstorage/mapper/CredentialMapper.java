@@ -14,8 +14,11 @@ public interface CredentialMapper {
     @Options(useGeneratedKeys = true, keyProperty = "credentialId")
     int insert(Credential credential);
 
+    @Select("select * from credentials where credentialid = #{credentialId})")
+    @Options(useGeneratedKeys = true, keyProperty = "credentialId")
+    public Credential getCredential(int  credentialId);
 
-    @Update("update credentials set url=#{url}, username=#{username}, password=#{password} where credentialid=#{credentialId}")
+    @Update("update credentials set url=#{url}, username=#{username}, key=#{key}, password=#{password} where credentialid=#{credentialId}")
     public boolean updateCredential(Credential credential);
 
 
