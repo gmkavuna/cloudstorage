@@ -41,7 +41,6 @@ public class CredentialService {
     public List<Credential> getAllCredentials(){
         List<Credential> decryptedCredentials = new ArrayList<Credential>();
         for (Credential credential: credentialMapper.getAllCredentials()) {
-            System.out.println(credential.getPassword());
             credential.setPassword(encryptionService.decryptValue(credential.getPassword(), credential.getKey()));
             decryptedCredentials.add(credential);
         }
