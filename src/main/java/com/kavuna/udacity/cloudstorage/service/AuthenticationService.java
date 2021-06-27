@@ -3,6 +3,7 @@ package com.kavuna.udacity.cloudstorage.service;
 
 import com.kavuna.udacity.cloudstorage.mapper.UserMapper;
 import com.kavuna.udacity.cloudstorage.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ public class AuthenticationService implements AuthenticationProvider {
     private UserMapper userMapper;
     private HashService hashService;
 
+    @Autowired
     public AuthenticationService(UserMapper userMapper, HashService hashService) {
         this.userMapper = userMapper;
         this.hashService = hashService;

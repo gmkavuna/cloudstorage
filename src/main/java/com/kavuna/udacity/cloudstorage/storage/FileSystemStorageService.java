@@ -6,6 +6,9 @@
 
 package com.kavuna.udacity.cloudstorage.storage;
 
+import com.kavuna.udacity.cloudstorage.model.File;
+import com.kavuna.udacity.cloudstorage.service.FileService;
+import com.kavuna.udacity.cloudstorage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -20,36 +23,49 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Date;
 import java.util.stream.Stream;
 
 @Service
 public class FileSystemStorageService implements StorageService {
 
 	private final Path rootLocation;
+	private final FileService fileService;
+	private final UserService userService;
 
 	@Autowired
-	public FileSystemStorageService(StorageProperties properties) {
+	public FileSystemStorageService(StorageProperties properties, FileService fileService, UserService userService) {
 		this.rootLocation = Paths.get(properties.getLocation());
+		this.fileService = fileService;
+		this.userService = userService;
 	}
 
 	@Override
-	public void store(MultipartFile file) {
+	public String store(MultipartFile file) {
 		try {
 			if (file.isEmpty()) {
+				file.getSize();
 				throw new StorageException("Failed to store empty file.");
 			}
+			if (file.getSize() > 1048576000 ){
+				throw new StorageException("File is too big. Maximum size allowed is 1048576000 bytes");
+			}
+			String fileName = new Date().getTime()+"_" + file.getOriginalFilename();
 			Path destinationFile = this.rootLocation.resolve(
-					Paths.get(file.getOriginalFilename()))
+					Paths.get(fileName))
 					.normalize().toAbsolutePath();
 			if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+
 				// This is a security check
 				throw new StorageException(
 						"Cannot store file outside current directory.");
 			}
+
 			try (InputStream inputStream = file.getInputStream()) {
 				Files.copy(inputStream, destinationFile,
 					StandardCopyOption.REPLACE_EXISTING);
 			}
+			return fileName;
 		}
 		catch (IOException e) {
 			throw new StorageException("Failed to store file.", e);
@@ -66,7 +82,6 @@ public class FileSystemStorageService implements StorageService {
 		catch (IOException e) {
 			throw new StorageException("Failed to read stored files", e);
 		}
-
 	}
 
 	@Override

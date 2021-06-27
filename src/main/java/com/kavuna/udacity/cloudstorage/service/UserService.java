@@ -2,6 +2,9 @@ package com.kavuna.udacity.cloudstorage.service;
 
 import com.kavuna.udacity.cloudstorage.mapper.UserMapper;
 import com.kavuna.udacity.cloudstorage.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -14,6 +17,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final HashService hashService;
 
+    @Autowired
     public UserService(UserMapper userMapper, HashService hashService) {
         this.userMapper = userMapper;
         this.hashService = hashService;
@@ -39,4 +43,5 @@ public class UserService {
     public List<User> getAllUsers() {
         return userMapper.getAllUsers();
     }
+
 }

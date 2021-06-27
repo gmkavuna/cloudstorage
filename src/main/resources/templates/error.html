@@ -6,17 +6,15 @@
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
 
-    <title>Result</title>
+    <title>Unable to process your request</title>
 </head>
 <body class="p-3 mb-2 bg-light text-black">
 <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
-    <div id="success-msg" th:if="${successMessage}" class="alert alert-success">
-        <span th:text="${successMessage}"></span>
-    </div>
+
     <div id="error-msg" th:if="${errorMessage}" class="alert alert-danger">
         <span th:text="${errorMessage}"></span>
     </div>
-    <span>Click <a th:href="@{/home}">here</a> to continue.</span>
+    <span>Click <a th:href="@{/home}">here</a> to go back to the home page.</span>
 </div>
 </body>
 </html>

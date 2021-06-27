@@ -3,6 +3,7 @@ package com.kavuna.udacity.cloudstorage.controller;
 import com.kavuna.udacity.cloudstorage.model.Credential;
 import com.kavuna.udacity.cloudstorage.service.CredentialService;
 import com.kavuna.udacity.cloudstorage.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ public class CredentialController {
     private final CredentialService credentialService;
     private final UserService userService;
 
+    @Autowired
     public CredentialController(CredentialService credentialService, UserService userService) {
         this.credentialService = credentialService;
         this.userService = userService;
@@ -29,26 +31,39 @@ public class CredentialController {
 
     @PostMapping("/addCredential")
     public String addCredential(Authentication authentication, Credential credential, Model model){
-        String errorMessage = null;
-        String successMessage = null;
 
+        try {
+            String errorMessage = null;
+            String successMessage = null;
 
+            if (!authentication.isAuthenticated()){
+                throw new Exception("Please make sure that you are logged in. ");
+            }
+            if (userService.getUser(authentication.getName()) == null) {
+                throw new Exception("Your session might have expired. Please log back in.");
+            }
 
-        //update if credential object exists
-        if (credential.getCredentialId() != null){
-            if (credentialService.updateCredential(credential)== true){
-                model.addAttribute("successMessage", "Credential successfully updated!");
+            //update if credential object exists
+            if (credential.getCredentialId() != null) {
+                if (credentialService.updateCredential(credential)) {
+                    model.addAttribute("successMessage", "Credential successfully updated!");
+                }
+            } else {
+                //add credential's owner - logged in user
+                int currentUserId = userService.getUser(authentication.getName()).getUserId();
+                credential.setUserId(currentUserId);
+
+                int rowsAdded = credentialService.insertCredential(credential);
+                if (rowsAdded < 0) {
+                    errorMessage = "We were unable to add your note!";
+                    model.addAttribute("errorMessage", errorMessage);
+                } else {
+                    model.addAttribute("successMessage", "Credential successfully created!");
+                }
             }
         }
-        else{
-            int rowsAdded = credentialService.insertCredential(credential);
-            if (rowsAdded < 0) {
-                errorMessage = "We were unable to add your note!";
-                model.addAttribute("errorMessage", errorMessage);
-            }
-            else{
-                model.addAttribute("successMessage", "Credential successfully created!");
-            }
+        catch (Exception exception){
+            model.addAttribute("errorMessage", exception.getMessage());
         }
         return "result";
     }
@@ -68,7 +83,6 @@ public class CredentialController {
             else{
                 successMessage = null;
             }
-
         }
         model.addAttribute("credentialId",  credentialId);
         model.addAttribute("successMessage",  successMessage);

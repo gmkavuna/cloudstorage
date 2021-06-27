@@ -77,17 +77,9 @@ public class CredentialManagementTests {
 
         driver.get(baseURL + "/home");
 
-        //checks if the newly added url is found on the page
-        assertTrue(homePage.getCredentialUrls().contains(credentialUrl));
-
-        //checks if the newly added username is found on the page
-        assertTrue(homePage.getCredentialUsernames().contains(credentialUsername));
-
-        //ensures that the plain text  password is found on the page
-        assertTrue(homePage.getCredentialPasswords().contains(credentialPassword));
 
         /**
-         * For each credential on the home page find the corresponding record in the db and ensures that the urls and
+         * For each credential on the home page find the corresponding record in the db and ensures that the urls,  and
          * usernames are the same. This also ensures that the corresponding db password is encrypted
          */
         for (Credential credential : homePage.getCredentials()) {
@@ -95,7 +87,8 @@ public class CredentialManagementTests {
             assertEquals(dbCredential.getUsername(), credentialUsername); //usernames match
             assertEquals(dbCredential.getUrl(), credentialUrl); //urls match
             assertTrue(Base64.isBase64(dbCredential.getPassword())); //password in the db is encrypted
-            assertFalse(Base64.isBase64(credential.getPassword())); //password on the page is plain text
+            assertTrue(Base64.isBase64(credential.getPassword())); //password on the page is plain text
+            assertEquals(dbCredential.getUnencryptedPassword(), credentialPassword); //the unencrypted password should match what we sent in.
         }
     }
 
@@ -136,10 +129,10 @@ public class CredentialManagementTests {
         //checks if the newly added username is found on the page
         assertTrue(homePage.getCredentialUsernames().contains(credentialUsernameUpdated));
 
-        //ensures that the plain text  password is found on the page
-        assertTrue(homePage.getCredentialPasswords().contains(credentialPasswordUpdated));
+        //ensures the password displayed on credentials tab (the table) is encrypted
+        assertFalse(homePage.getCredentialPasswords().contains(credentialPasswordUpdated));
     }
-    @DisplayName("Test deletes an existing a credential and verifies that it is no longer displayed.")
+    @DisplayName("Test deletes an existing credential and verifies that it is no longer displayed.")
     @Test
     public void testDeleteCredential(){
 
@@ -164,8 +157,8 @@ public class CredentialManagementTests {
         //checks if the newly added username is found on the page
         assertTrue(homePage.getCredentialUsernames().contains(credentialUsername));
 
-        //ensures that the plain text  password is found on the page
-        assertTrue(homePage.getCredentialPasswords().contains(credentialPassword));
+        //ensures that the password on credentials tab is encrypted
+        assertFalse(homePage.getCredentialPasswords().contains(credentialPassword));
 
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 
@@ -185,7 +178,5 @@ public class CredentialManagementTests {
         //checks if the username of the just deleted credential is no longer on the page
         assertFalse(homePage.getCredentialUsernames().contains(credentialUsername));
 
-        //ensures that the plain text  password is found on the page
-        assertFalse(homePage.getCredentialPasswords().contains(credentialPassword));
     }
 }

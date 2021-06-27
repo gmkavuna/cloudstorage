@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoginPage {
 
@@ -16,6 +17,7 @@ public class LoginPage {
     @FindBy(css="#submit-button")
     private WebElement submitButton;
 
+    @Autowired
     public LoginPage(WebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
     }

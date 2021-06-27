@@ -1,6 +1,7 @@
 package com.kavuna.udacity.cloudstorage.config;
 
 import com.kavuna.udacity.cloudstorage.service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,6 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private AuthenticationService authenticationService;
 
+    @Autowired
     public SecurityConfig(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
